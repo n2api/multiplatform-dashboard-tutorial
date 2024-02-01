@@ -12,12 +12,11 @@ const Dashboard = () => {
         }
       })
       setData(
-        // data.data.map(campaign => ({
-        //   name: campaign.name,
-        //   id: campaign.id,
-        //   status: campaign.status,
-        // }))
-        data.data
+        data.data.map(campaign => ({
+          name: campaign.name,
+          id: campaign.id,
+          status: campaign.status,
+        }))
       )
     }
     fetchData()
