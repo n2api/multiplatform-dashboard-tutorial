@@ -31,8 +31,11 @@ const Dashboard = () => {
           <div className="mt-4">
             {data && data.map(campaign => (
               <div key={campaign.id} className="bg-gray-100 rounded-lg p-4 mt-2">
-                <h3 className="text-lg font-bold">{campaign.name}</h3>
-                <p className="text-sm">{campaign.status}</p>
+                <div className="flex flex-col space-y-1">
+                  <h3 className="text-lg font-bold">{campaign.name}</h3>
+                  <p className="text-sm">{campaign.status}</p>
+                  <p className="text-sm font-medium">ID: {campaign.id}</p>
+                </div>
               </div>
             ))}
           </div>
