@@ -3,25 +3,39 @@ import axios from 'axios'
 
 const Dashboard = () => {
   const [data, setData] = useState(null)
+  const [platforms, setPlatforms] = useState(null)
 
+  // load available platforms
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await axios.get('https://n2.adprophet.de/googleads/campaigns', {
+    const fetchPlatforms = async () => {
+      const fetchedPlatforms = await axios.get('https://n2.adprophet.de/platform', {
         headers: {
           'Authorization': 'Bearer ' + ''
         }
       })
-      setData(
-        // data.data.map(campaign => ({
-        //   name: campaign.name,
-        //   id: campaign.id,
-        //   status: campaign.status,
-        // }))
-        data.data
-      )
+      setPlatforms(fetchedPlatforms.data.map(platform => platform.name.toLowerCase()))
+    }
+    fetchPlatforms()
+  }, []);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const combinedData = await Promise.all(platforms?.map(async platform => {
+        const platformData = await axios.get('https://n2.adprophet.de/' + platform + '/campaigns', {
+          headers: {
+            'Authorization': 'Bearer ' + ''
+          }
+        })
+        console.log(platformData.data);
+        return platformData.data;
+      }))
+      setData(combinedData.flat())
+      console.log("Combined data");
+      console.log(combinedData.flat());
     }
     fetchData()
-  }, [])
+  }, [platforms]);
 
   return (
     <div className="p-4">
@@ -34,6 +48,7 @@ const Dashboard = () => {
               <div key={campaign.id} className="bg-gray-100 rounded-lg p-4 mt-2">
                 <h3 className="text-lg font-bold">{campaign.name}</h3>
                 <p className="text-sm">{campaign.status}</p>
+                <p className="text-sm">{campaign.platform}</p>
               </div>
             ))}
           </div>
